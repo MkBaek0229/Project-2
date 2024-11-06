@@ -18,8 +18,12 @@ function SideBarList({ $target, initalState }) {
                 str += `
                     <li class="dataList">
                         📄 ${data[key].title}
-                        <button class="addBtn">➕</button>
-                        <button class="delBtn">🗑️</button>
+                        <button class="addBtn" data-id="${
+                            data[key].id
+                        }">➕</button>
+                        <button class="delBtn" data-id="${
+                            data[key].id
+                        }">🗑️</button>
                         <ul>${this.createTreeView(data[key].documents)}</ul>
                     </li>
                `
@@ -27,8 +31,8 @@ function SideBarList({ $target, initalState }) {
                 str += `
                 <li class="dataList">
                     📄 ${data[key].title}
-                    <button class="addBtn">➕</button>
-                    <button class="delBtn">🗑️</button>
+                    <button class="addBtn" data-id="${data[key].id}">➕</button>
+                    <button class="delBtn" data-id="${data[key].id}">🗑️</button>
                 </li>
            `
             }
@@ -44,7 +48,9 @@ function SideBarList({ $target, initalState }) {
                 .map(
                     (document) =>
                         `<li class="dataList">📄 ${document.title}
-                        <button class="addBtn">➕</button>
+                        <button class="addBtn" data-id="${
+                            document.id
+                        }">➕</button>
                         <button class="delBtn" data-id="${
                             document.id
                         }">🗑️</button>
@@ -73,11 +79,25 @@ function SideBarList({ $target, initalState }) {
         this.setState()
     }
 
+    const onUpate = async (id) => {
+        await request('', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: '제목없음',
+                parent: id,
+            }),
+        })
+        this.setState()
+    }
     $list.addEventListener('click', (e) => {
-        const $delBtn = e.target.closest('.delBtn')
+        const classname = e.target.className
+        const id = e.target.dataset.id
 
-        const id = $delBtn.dataset.id
-        onDelete(id)
+        if (classname == 'delBtn') {
+            onDelete(id)
+        } else if (classname == 'addBtn') {
+            onUpate(id)
+        }
     })
 }
 
