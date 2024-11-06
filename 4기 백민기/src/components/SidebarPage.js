@@ -1,85 +1,34 @@
-import { request } from '../utils/api.js'
 import NewBtn from './NewBtn.js'
+import SideBarList from './SidebarList.js'
+import { request } from '../../utils/api.js'
 
 export default function SidebarPage({ $target, initalState }) {
-    this.state = initalState
-
-    this.createTreeView = (data) => {
-        let str = ''
-        for (const key in data) {
-            if (data[key].documents.length > 0) {
-                str += `
-                    <li class="dataList">
-                        📄 ${data[key].title}
-                        <button class="addBtn">➕</button>
-                        <button class="delBtn">🗑️</button>
-                        <ul>${this.createTreeView(data[key].documents)}</ul>
-                    </li>
-               `
-            } else {
-                str += `
-                <li class="dataList">
-                    📄 ${data[key].title}
-                    <button class="addBtn">➕</button>
-                    <button class="delBtn">🗑️</button>
-                </li>
-           `
-            }
-        }
-
-        return str
-    }
-
     const $page = document.createElement('div')
-    $page.classList.add('listContainer')
-
-    this.render = () => {
-        $page.innerHTML = `
-        <ul class="documentList">
-            ${this.state
-                .map(
-                    (document) =>
-                        `<li class="dataList">📄 ${document.title}
-                        <button class="addBtn">➕</button>
-                        <button class="delBtn" data-id="${
-                            document.id
-                        }">🗑️</button>
-                    </li>
-                    ${
-                        document.documents.length > 0
-                            ? `<ul>${this.createTreeView(
-                                  document.documents
-                              )} </ul>`
-                            : ''
-                    }
-                    
-                    
-                    `
-                )
-                .join('')}
-        </ul>
-    `
-    }
-    this.render()
-
     $target.appendChild($page)
 
-    const $newBtn = new NewBtn({ $target: $page })
-
-    this.setState = async () => {
-        const documentList = await request(``)
-        this.state = documentList
-        this.render()
-    }
-    const onDelete = async (id) => {
-        await request(`/${id}`, {
-            method: 'DELETE',
-        })
-        this.setState()
-    }
-    $page.addEventListener('click', (e) => {
-        const $delBtn = e.target.closest('.delBtn')
-        const id = $delBtn.dataset.id
-        onDelete(id)
+    $page.classList.add('listContainer')
+    const $sidebarList = new SideBarList({
+        $target: $page,
+        initalState,
     })
+
+    this.setState = () => {
+        $sidebarList.setState()
+    }
+
+    const onCreate = () => {
+        request('', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: '문서 제목2',
+                // parent가 null이면 루트 Document가 됩니다.
+                // 특정 Document에 속하게 하려면 parent에
+                // 해당 Document id를 넣으세요.
+                parent: null,
+            }),
+        })
+        $sidebarList.setState()
+    }
+
+    const $newBtn = new NewBtn({ $target: $page, onCreate })
 }

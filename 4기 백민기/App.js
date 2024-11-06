@@ -1,7 +1,5 @@
-import EditorPage from './src/components/EditorPage.js'
-import NewBtn from './src/components/NewBtn.js'
-import SidebarPage from './src/components/SidebarPage.js'
-import { request } from './utils/api.js'
+import EditorPage from './components/EditorPage.js'
+import SidebarPage from './components/sidebar/SidebarPage.js'
 
 export default function App({ $target }) {
     const editorDummyData = {
@@ -16,7 +14,6 @@ export default function App({ $target }) {
     $target.appendChild($editorContainer)
 
     const initalState = []
-
     const sidebarPage = new SidebarPage({
         $target: $listContainer,
         initalState,
