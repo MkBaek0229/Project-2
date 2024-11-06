@@ -1,5 +1,6 @@
 import { request } from '../utils/api.js'
 import NewBtn from './NewBtn.js'
+
 export default function SidebarPage({ $target, initalState }) {
     this.state = initalState
 
@@ -25,10 +26,13 @@ export default function SidebarPage({ $target, initalState }) {
            `
             }
         }
+
         return str
     }
+
     const $page = document.createElement('div')
     $page.classList.add('listContainer')
+
     this.render = () => {
         $page.innerHTML = `
         <ul class="documentList">
@@ -37,7 +41,9 @@ export default function SidebarPage({ $target, initalState }) {
                     (document) =>
                         `<li class="dataList">📄 ${document.title}
                         <button class="addBtn">➕</button>
-                        <button class="delBtn">🗑️</button>
+                        <button class="delBtn" data-id="${
+                            document.id
+                        }">🗑️</button>
                     </li>
                     ${
                         document.documents.length > 0
@@ -55,13 +61,25 @@ export default function SidebarPage({ $target, initalState }) {
     `
     }
     this.render()
+
     $target.appendChild($page)
 
     const $newBtn = new NewBtn({ $target: $page })
 
     this.setState = async () => {
-        const documentList = await request()
+        const documentList = await request(``)
         this.state = documentList
         this.render()
     }
+    const onDelete = async (id) => {
+        await request(`/${id}`, {
+            method: 'DELETE',
+        })
+        this.setState()
+    }
+    $page.addEventListener('click', (e) => {
+        const $delBtn = e.target.closest('.delBtn')
+        const id = $delBtn.dataset.id
+        onDelete(id)
+    })
 }
