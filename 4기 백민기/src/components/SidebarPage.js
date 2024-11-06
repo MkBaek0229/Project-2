@@ -2,7 +2,7 @@ import NewBtn from './NewBtn.js'
 import SideBarList from './SidebarList.js'
 import { request } from '../../utils/api.js'
 
-export default function SidebarPage({ $target, initalState }) {
+export default function SidebarPage({ $target, initalState, onEditing }) {
     const $page = document.createElement('div')
     $target.appendChild($page)
 
@@ -10,6 +10,7 @@ export default function SidebarPage({ $target, initalState }) {
     const $sidebarList = new SideBarList({
         $target: $page,
         initalState,
+        onEditing,
     })
 
     this.setState = () => {
@@ -30,5 +31,5 @@ export default function SidebarPage({ $target, initalState }) {
         $sidebarList.setState()
     }
 
-    const $newBtn = new NewBtn({ $target: $page, onCreate })
+    const $newBtn = new NewBtn({ $target: $page, onCreate, onEditing })
 }

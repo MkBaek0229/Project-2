@@ -1,5 +1,5 @@
 import { request } from '../../utils/api.js'
-function SideBarList({ $target, initalState }) {
+function SideBarList({ $target, initalState, onEditing }) {
     const $list = document.createElement('div')
     $target.appendChild($list)
 
@@ -16,7 +16,7 @@ function SideBarList({ $target, initalState }) {
         for (const key in data) {
             if (data[key].documents.length > 0) {
                 str += `
-                    <li class="dataList">
+                    <li class="dataList" data-id="${data[key].id}">
                         📄 ${data[key].title}
                         <button class="addBtn" data-id="${
                             data[key].id
@@ -29,7 +29,7 @@ function SideBarList({ $target, initalState }) {
                `
             } else {
                 str += `
-                <li class="dataList">
+                <li class="dataList" data-id="${data[key].id}">
                     📄 ${data[key].title}
                     <button class="addBtn" data-id="${data[key].id}">➕</button>
                     <button class="delBtn" data-id="${data[key].id}">🗑️</button>
@@ -47,7 +47,9 @@ function SideBarList({ $target, initalState }) {
             ${this.state
                 .map(
                     (document) =>
-                        `<li class="dataList">📄 ${document.title}
+                        `<li class="dataList" data-id="${document.id}">📄 ${
+                            document.title
+                        }
                         <button class="addBtn" data-id="${
                             document.id
                         }">➕</button>
@@ -97,6 +99,8 @@ function SideBarList({ $target, initalState }) {
             onDelete(id)
         } else if (classname == 'addBtn') {
             onUpate(id)
+        } else if (classname == 'dataList') {
+            onEditing(id)
         }
     })
 }
