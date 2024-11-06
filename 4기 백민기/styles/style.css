@@ -5,20 +5,14 @@
 }
 /* sidebar */
 ul {
-    list-style-type: circle;
+    margin-left: 10%;
 }
 li {
-    margin-top: 4%;
 }
 .listContainer {
-    width: 300px;
-    height: 1000px;
-    background-color: #f7f6f3;
-    overflow: auto;
-    resize: horizontal;
 }
 .dataList {
-    margin: 10% 0;
+    margin: 2% 0;
     color: #808080;
 }
 .addBtn,
